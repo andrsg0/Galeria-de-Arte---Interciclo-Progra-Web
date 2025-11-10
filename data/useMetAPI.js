@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export function useMetAPI(query = "paint", limit = 10) {
+export function useMetAPI(query = "paint", limit = 20) {
   const [artworks, setArtworks] = useState([]);
   const [loading, setLoading] = useState(true);
 
