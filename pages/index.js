@@ -11,7 +11,8 @@ import Button from "../components/Button";
 import Link from "next/link";
 import Cursor from "../components/Cursor";
 
-// Local Data
+// Dynamic Data
+import { useMetAPI } from "../data/useMetAPI";
 import data from "../data/portfolio.json";
 
 export default function Home() {
@@ -23,6 +24,9 @@ export default function Home() {
   const textThree = useRef();
   const textFour = useRef();
 
+  const { artworks, loading } = useMetAPI();
+
+
   // Handling Scroll
   const handleWorkScroll = () => {
     window.scrollTo({
@@ -31,6 +35,8 @@ export default function Home() {
       behavior: "smooth",
     });
   };
+
+  
 
   const handleAboutScroll = () => {
     window.scrollTo({
@@ -95,17 +101,20 @@ export default function Home() {
         </div>
         <div className="mt-10 laptop:mt-30 p-2 laptop:p-0" ref={workRef}>
           <h1 className="text-2xl text-bold">Work.</h1>
-
           <div className="mt-5 laptop:mt-10 grid grid-cols-1 tablet:grid-cols-2 gap-4">
-            {data.projects.map((project) => (
-              <WorkCard
-                key={project.id}
-                img={project.imageSrc}
-                name={project.title}
-                description={project.description}
-                onClick={() => window.open(project.url)}
-              />
-            ))}
+            {loading ? (
+              <p>Cargando obras...</p>
+            ) : (
+              artworks.map((project) => (
+                <WorkCard
+                  key={project.id}
+                  img={project.imageSrc}
+                  name={project.title}
+                  description={project.description}
+                  onClick={() => window.open(project.url)}
+                />
+              ))
+            )}
           </div>
         </div>
 
