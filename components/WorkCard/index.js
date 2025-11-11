@@ -52,16 +52,13 @@ const WorkCard = ({ img, name, description, onClick }) => {
 
   return (
     <div
-      className="overflow-hidden rounded-lg p-2 laptop:p-4 first:ml-0 link"
+      className="masonry-item overflow-hidden rounded-lg p-2 laptop:p-4 first:ml-0 link"
       onClick={onClick}
     >
-      <div
-        className="relative rounded-lg overflow-hidden transition-all ease-out duration-300 h-48 mob:h-auto group"
-        style={{ height: "600px" }}
-      >
+      <div className="relative rounded-lg overflow-hidden transition-all ease-out duration-300 group">
         <img
           alt={name}
-          className="h-full w-full object-cover hover:scale-110 transition-all ease-out duration-300"
+          className="w-full h-auto object-cover hover:scale-105 transition-all ease-out duration-300"
           src={img}
         />
 
@@ -78,10 +75,10 @@ const WorkCard = ({ img, name, description, onClick }) => {
           <img src="/images/star.svg" alt="star" className="w-5 h-5" />
         </button>
       </div>
-      <h1 className="mt-5 text-3xl font-medium">
+      <h1 className="mt-5 text-xl font-medium">
         {name ? name : "Project Name"}
       </h1>
-      <h2 className="text-xl opacity-50">
+      <h2 className="text-sm opacity-50">
         {description ? description : "Description"}
       </h2>
     </div>

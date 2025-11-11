@@ -57,9 +57,9 @@ export default function Favorites() {
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-1 tablet:grid-cols-2 gap-6 mt-4">
+              <div className="masonry mt-4">
                 {favs.map((item) => (
-                  <div key={item.id} className="relative">
+                  <div key={item.id} className="masonry-item">
                     <WorkCard
                       img={item.img}
                       name={item.name}

@@ -91,25 +91,25 @@ export default function Home() {
         </div>
         <div className="mt-10 laptop:mt-30 p-2 laptop:p-0" ref={workRef}>
           <h1 className="text-2xl text-bold">Obras.</h1>
-          <div className="mt-5 laptop:mt-10 grid grid-cols-1 tablet:grid-cols-2 gap-4">
+          <div className="mt-5 laptop:mt-10 masonry">
             {loading ? (
               // Render a grid of skeleton cards while loading
               Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
-                  className="overflow-hidden rounded-lg p-2 laptop:p-4 first:ml-0 bg-transparent"
+                  className="masonry-item overflow-hidden rounded-lg p-2 laptop:p-4 first:ml-0 bg-transparent"
                 >
-                  <div className="relative rounded-lg overflow-hidden transition-all ease-out duration-300 h-48 mob:h-auto group">
-                    <div className="h-48 bg-gray-300 dark:bg-gray-700 w-full object-cover animate-pulse" />
+                  <div className="relative rounded-lg overflow-hidden transition-all ease-out duration-300 group">
+                    <div className="bg-gray-300 dark:bg-gray-700 w-full object-cover animate-pulse" style={{paddingBottom: '75%'}} />
                     <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="w-6 h-6 bg-gray-300 dark:bg-gray-700 rounded-full animate-pulse" />
                     </div>
                   </div>
-                  <h1 className="mt-5 text-3xl font-medium">
-                    <span className="block h-6 bg-gray-300 dark:bg-gray-700 rounded w-3/4 animate-pulse" />
+                  <h1 className="mt-5 text-xl font-medium">
+                    <span className="block h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4 animate-pulse" />
                   </h1>
-                  <h2 className="text-xl opacity-50">
-                    <span className="block mt-2 h-4 bg-gray-300 dark:bg-gray-700 rounded w-2/3 animate-pulse" />
+                  <h2 className="text-sm opacity-50">
+                    <span className="block mt-2 h-3 bg-gray-300 dark:bg-gray-700 rounded w-2/3 animate-pulse" />
                   </h2>
                 </div>
               ))
