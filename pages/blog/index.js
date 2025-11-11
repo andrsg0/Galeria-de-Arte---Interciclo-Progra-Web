@@ -1,4 +1,5 @@
 import Head from "next/head";
+import WorkCard from "../../components/WorkCard";
 import Router, { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { stagger } from "../../animations";
@@ -20,18 +21,18 @@ const Departments = ({ posts }) => {
   const [artworks, setArtworks] = useState([]);
   const [loading, setLoading] = useState(false);
 
-useEffect(() => {
-  fetch("https://collectionapi.metmuseum.org/public/collection/v1/departments")
-    .then(res => res.json())
-    .then(data => {
-      setDepartments(data.departments);
-     if (!selectedDept && data.departments && data.departments.length > 0) {
-       setSelectedDept(String(data.departments[0].departmentId)); // primer depto recibido
-     }
-    });
-}, []);
-
-
+  useEffect(() => {
+    fetch(
+      "https://collectionapi.metmuseum.org/public/collection/v1/departments"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setDepartments(data.departments);
+        if (!selectedDept && data.departments && data.departments.length > 0) {
+          setSelectedDept(String(data.departments[0].departmentId)); // primer depto recibido
+        }
+      });
+  }, []);
 
   useIsomorphicLayoutEffect(() => {
     // Solo ejecutar si el elemento existe
@@ -50,54 +51,59 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-  if (!selectedDept) {
-    setArtworks([]);
-    return;
-  }
-  setLoading(true);
-  fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?departmentId=${selectedDept}&hasImages=true&isHighligth=true&q=a`)
-    .then(res => res.json())
-    .then(data => {
-      console.log('Búsqueda por departamento ', selectedDept, data);
-      const ids = (data.objectIDs || []).slice(0, 12); // Limita a 12 artworks
-      if (ids.length === 0) {
-        setArtworks([]);
-        setLoading(false);
-        return;
-      }
-    Promise.allSettled(
-      ids.map(id =>
-        fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`)
-          .then(res => {
-            if (!res.ok) throw new Error("Not Found");
-            return res.json();
-          })
-      )
-    ).then(results => {
-      // Solo los que están fulfilled y tienen imagen y título
-      setArtworks(
-        results
-          .filter(r => r.status === "fulfilled" && r.value?.primaryImageSmall && r.value?.title)
-          .map(r => ({
-            id: r.value.objectID,
-            image: r.value.primaryImageSmall,
-            title: r.value.title,
-            desc: r.value.artistDisplayName || r.value.objectDate || "",
-            url: r.value.objectURL,
-            date: r.value.objectDate
-          }))
-      );
-      setLoading(false);
-    });
-  });
-}, [selectedDept]);
-
-
+    if (!selectedDept) {
+      setArtworks([]);
+      return;
+    }
+    setLoading(true);
+    fetch(
+      `https://collectionapi.metmuseum.org/public/collection/v1/search?departmentId=${selectedDept}&hasImages=true&isHighligth=true&q=a`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Búsqueda por departamento ", selectedDept, data);
+        const ids = (data.objectIDs || []).slice(0, 20); // Limita a 20 artworks
+        if (ids.length === 0) {
+          setArtworks([]);
+          setLoading(false);
+          return;
+        }
+        Promise.allSettled(
+          ids.map((id) =>
+            fetch(
+              `https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
+            ).then((res) => {
+              if (!res.ok) throw new Error("Not Found");
+              return res.json();
+            })
+          )
+        ).then((results) => {
+          // Solo los que están fulfilled y tienen imagen y título
+          setArtworks(
+            results
+              .filter(
+                (r) =>
+                  r.status === "fulfilled" &&
+                  r.value?.primaryImageSmall &&
+                  r.value?.title
+              )
+              .map((r) => ({
+                id: r.value.objectID,
+                image: r.value.primaryImageSmall,
+                title: r.value.title,
+                desc: r.value.artistDisplayName || r.value.objectDate || "",
+                url: r.value.objectURL,
+                date: r.value.objectDate,
+              }))
+          );
+          setLoading(false);
+        });
+      });
+  }, [selectedDept]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
 
   return (
     showBlog.current && (
@@ -120,38 +126,60 @@ useEffect(() => {
               Obras por Departamento
             </h1>
             <div className="my-8">
-              <label htmlFor="departments" style={{fontWeight: "bold"}}>Filtrar por departamento:</label>
+              <label htmlFor="departments" style={{ fontWeight: "bold" }}>
+                Filtrar por departamento:
+              </label>
               <select
                 id="departments"
                 className="ml-3 p-2 border rounded-md"
                 value={selectedDept}
-                onChange={e => setSelectedDept(e.target.value)}
+                onChange={(e) => setSelectedDept(e.target.value)}
               >
-                {departments.map(dept => (
+                {departments.map((dept) => (
                   <option key={dept.departmentId} value={dept.departmentId}>
                     {dept.displayName}
                   </option>
                 ))}
               </select>
             </div>
-            <div className="mt-10 grid grid-cols-1 mob:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 justify-between gap-10">
+            <div className="mt-5 laptop:mt-10 masonry">
               {loading ? (
-                <p>Cargando obras...</p>
+                // Render a grid of skeleton cards while loading
+                Array.from({ length: 8 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="masonry-item overflow-hidden rounded-lg p-2 laptop:p-4 first:ml-0 bg-transparent"
+                  >
+                    <div className="relative rounded-lg overflow-hidden transition-all ease-out duration-300 group">
+                      <div
+                        className="bg-gray-300 dark:bg-gray-700 w-full object-cover animate-pulse"
+                        style={{ paddingBottom: "75%" }}
+                      />
+                      <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="w-6 h-6 bg-gray-300 dark:bg-gray-700 rounded-full animate-pulse" />
+                      </div>
+                    </div>
+                    <h1 className="mt-5 text-xl font-medium">
+                      <span className="block h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4 animate-pulse" />
+                    </h1>
+                    <h2 className="text-sm opacity-50">
+                      <span className="block mt-2 h-3 bg-gray-300 dark:bg-gray-700 rounded w-2/3 animate-pulse" />
+                    </h2>
+                  </div>
+                ))
+              ) : artworks.length === 0 && selectedDept ? (
+                <p>No hay obras en este departamento.</p>
               ) : (
-                artworks.length === 0 && selectedDept
-                  ? <p>No hay obras en este departamento.</p>
-                  : artworks.map(obj => (
-                        <div
-                          key={obj.id}
-                          className="cursor-pointer relative"
-                          onClick={() => window.open(obj.url, "_blank")}
-                        >
-                          <img className="w-full h-60 rounded-lg shadow-lg object-cover" src={obj.image} alt={obj.title} />
-                          <h2 className="mt-5 text-4xl">{obj.title}</h2>
-                          <p className="mt-2 opacity-50 text-lg">{obj.desc}</p>
-                          <span className="text-sm mt-5 opacity-25">{obj.date}</span>
-                        </div>
-                      ))
+                artworks.map((obj) => (
+                  <WorkCard
+                    key={obj.id}
+                    img={obj.image}
+                    name={obj.title}
+                    description={obj.desc}
+                    onClick={() => window.open(obj.url)}
+                    url={obj.url}
+                  />
+                ))
               )}
             </div>
           </div>

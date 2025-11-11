@@ -1,35 +1,29 @@
 import React from "react";
-import Socials from "../Socials";
-import Link from "next/link";
-import Button from "../Button";
 
-const Footer = ({}) => {
+// Minimal, elegant footer matching the site's style.
+// Change the values below to the real names, university and year.
+const PERSON_ONE = "Fabio Camacho";
+const PERSON_TWO = "Andrés Gómez";
+const UNIVERSITY = "Universidad de Cuenca";
+const YEAR = new Date().getFullYear();
+
+const Footer = () => {
   return (
-    <>
-      <div className="mt-5 laptop:mt-40 p-2 laptop:p-0">
-        <div>
-          <h1 className="text-2xl text-bold">Contact.</h1>
-          <div className="mt-10">
-            <h1 className="text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl text-bold">
-              LET&apos;S WORK
-            </h1>
-            <h1 className="text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl text-bold">
-              TOGETHER
-            </h1>
-            <Button type="primary">Schedule a call</Button>
-            <div className="mt-10">
-              <Socials />
-            </div>
-          </div>
+    <footer className="mt-12 border-t border-gray-200 dark:border-gray-700 py-8">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col items-center text-center gap-2">
+          <p className="text-sm font-large text-gray-800 dark:text-gray-100">
+            {PERSON_ONE} · {PERSON_TWO}
+          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            {UNIVERSITY} • {YEAR}
+          </p>
+          <small className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+            Galería de Arte
+          </small>
         </div>
       </div>
-      <h1 className="text-sm text-bold mt-2 laptop:mt-10 p-2 laptop:p-0">
-        Made With ❤ by{" "}
-        <Link href="http://www.chetanverma.com">
-          <a className="underline underline-offset-1">Chetan Verma</a>
-        </Link>
-      </h1>
-    </>
+    </footer>
   );
 };
 
