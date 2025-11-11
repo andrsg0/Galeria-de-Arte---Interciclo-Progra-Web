@@ -176,7 +176,7 @@ const Departments = ({ posts }) => {
                     img={obj.image}
                     name={obj.title}
                     description={obj.desc}
-                    onClick={() => window.open(obj.url)}
+                    onClick={() => router.push(`/art/${obj.id}`)}
                     url={obj.url}
                   />
                 ))
