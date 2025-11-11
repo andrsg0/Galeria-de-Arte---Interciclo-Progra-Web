@@ -52,16 +52,13 @@ const WorkCard = ({ img, name, description, onClick }) => {
 
   return (
     <div
-      className="overflow-hidden rounded-lg p-2 laptop:p-4 first:ml-0 link"
+      className="masonry-item overflow-hidden rounded-lg p-2 laptop:p-4 first:ml-0 link"
       onClick={onClick}
     >
-      <div
-        className="relative rounded-lg overflow-hidden transition-all ease-out duration-300 h-48 mob:h-auto group"
-        style={{ height: "600px" }}
-      >
+      <div className="relative rounded-lg overflow-hidden transition-all ease-out duration-300 group">
         <img
           alt={name}
-          className="h-full w-full object-cover hover:scale-110 transition-all ease-out duration-300"
+          className="w-full h-auto object-cover hover:scale-105 transition-all ease-out duration-300"
           src={img}
         />
 
@@ -71,17 +68,25 @@ const WorkCard = ({ img, name, description, onClick }) => {
           onClick={handleSave}
           aria-pressed={saved}
           aria-label={saved ? `Quitar ${name} de favoritos` : `Guardar ${name} en favoritos`}
-          className={`absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 dark:bg-gray-800/80 rounded-full p-2 shadow-md hover:scale-105 ${
+          className={`absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 dark:bg-gray-800/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm ${
             saved ? "ring-2 ring-yellow-400" : ""
-          }`}
+          } ${saved ? 'text-yellow-400' : 'text-gray-700'}`}
         >
-          <img src="/images/star.svg" alt="star" className="w-5 h-5" />
+          {/* Inline SVG so sizing and color are consistent */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            className="w-4 h-4 fill-current"
+            aria-hidden="true"
+          >
+            <path d="M12 .587l3.668 7.431L23.4 9.75l-5.7 5.557L19.335 24 12 20.202 4.665 24l1.635-8.693L.6 9.75l7.732-1.732L12 .587z" />
+          </svg>
         </button>
       </div>
-      <h1 className="mt-5 text-3xl font-medium">
+      <h1 className="mt-5 text-xl font-medium">
         {name ? name : "Project Name"}
       </h1>
-      <h2 className="text-xl opacity-50">
+      <h2 className="text-sm opacity-50">
         {description ? description : "Description"}
       </h2>
     </div>
