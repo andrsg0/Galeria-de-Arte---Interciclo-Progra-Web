@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { get, set } from "idb-keyval";
 import Head from "next/head";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -13,21 +14,41 @@ export default function Favorites() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    try {
-      const raw = localStorage.getItem("favorites");
-      const arr = raw ? JSON.parse(raw) : [];
-      setFavs(arr);
-    } catch (err) {
-      setFavs([]);
-    }
-    setLoading(false);
-  }, []);
+        let mounted = true;
+        async function loadFavs() {
+          try {
+            // intenta leer desde IndexedDB primero
+            const idb = await get("favorites");
+            let arr = Array.isArray(idb) ? idb : null;
+            // fallback a localStorage si no hay nada en idb
+            if (!arr) {
+              const raw = localStorage.getItem("favorites");
+              arr = raw ? JSON.parse(raw) : [];
+            }
+            if (mounted) setFavs(arr);
+          } catch (err) {
+            if (mounted) setFavs([]);
+          } finally {
+            if (mounted) setLoading(false);
+          }
+        }
+    
+        loadFavs();
+        const handleOnline = () => loadFavs();
+        window.addEventListener("online", handleOnline);
+        return () => {
+          mounted = false;
+          window.removeEventListener("online", handleOnline);
+        };
+      }, []);
 
-  const removeFavorite = (id) => {
+  const removeFavorite = async (id) => {
     try {
       const next = favs.filter((f) => f.id !== id);
       setFavs(next);
+      // sincroniza en localStorage e IndexedDB
       localStorage.setItem("favorites", JSON.stringify(next));
+      await set("favorites", next);
     } catch (err) {
       console.error("Failed to remove favorite", err);
     }
@@ -44,6 +65,9 @@ export default function Favorites() {
 
         <div className="mt-8">
           <h1 className="text-3xl font-bold">Tus favoritos</h1>
+          {!navigator.onLine && (
+            <p className="text-sm text-gray-600 mt-2">Estás sin conexión — mostrando favoritas guardadas</p>
+          )}
           <p className="text-gray-600 mt-2">Aquí encontrarás las obras que guardaste.</p>
 
           <div className="mt-6">
