@@ -22,7 +22,9 @@ function MyApp({ Component, pageProps }) {
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
       </Head>
-      <Component {...pageProps} />
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </>
   );
 }

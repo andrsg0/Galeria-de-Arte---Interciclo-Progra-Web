@@ -125,18 +125,37 @@ const Departments = ({ posts }) => {
             >
               Obras por Departamento
             </h1>
-            <div className="my-8">
-              <label htmlFor="departments" style={{ fontWeight: "bold" }}>
+            <div className="my-8 flex flex-col tablet:flex-row tablet:items-center gap-4">
+              <label 
+                htmlFor="departments" 
+                className="font-medium text-gray-900 dark:text-white text-sm uppercase tracking-wide"
+              >
                 Filtrar por departamento:
               </label>
               <select
                 id="departments"
-                className="ml-3 p-2 border rounded-md"
+                className="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent cursor-pointer appearance-none"
                 value={selectedDept}
                 onChange={(e) => setSelectedDept(e.target.value)}
+                style={{
+                  backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/csvg%3e")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 0.5rem center',
+                  backgroundSize: '1.5em 1.5em',
+                  paddingRight: '2.5rem',
+                }}
               >
                 {departments.map((dept) => (
-                  <option key={dept.departmentId} value={dept.departmentId}>
+                  <option
+                    key={dept.departmentId}
+                    value={dept.departmentId}
+                    style={{
+                      padding: '8px 12px',
+                      backgroundColor: '#ffffff',
+                      color: '#111827',
+                      fontWeight: '500',
+                    }}
+                  >
                     {dept.displayName}
                   </option>
                 ))}

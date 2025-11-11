@@ -27,7 +27,6 @@ export default function Home() {
 
   const { artworks, loading } = useMetAPI();
 
-
   // Handling Scroll
   const handleWorkScroll = () => {
     window.scrollTo({
@@ -36,8 +35,6 @@ export default function Home() {
       behavior: "smooth",
     });
   };
-
-  
 
   const handleAboutScroll = () => {
     window.scrollTo({
@@ -56,7 +53,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className={`relative ${data.showCursor && "cursor-none"}`}>
+    <div className={`relative ${data.showCursor && "cursor-none"} font-bold`}>
       {data.showCursor && <Cursor />}
       <Head>
         <title>Galeria de Arte</title>
@@ -66,9 +63,7 @@ export default function Home() {
       <div className="gradient-circle-bottom"></div>
 
       <div className="container mx-auto mb-10">
-        <Header
-          handleWorkScroll={handleWorkScroll}
-        />
+        <Header handleWorkScroll={handleWorkScroll} />
         <div className="laptop:mt-20 mt-10">
           <div className="mt-5">
             <h1
@@ -90,52 +85,61 @@ export default function Home() {
         <div className="mt-10 laptop:mt-30 p-2 laptop:p-0" ref={workRef}>
           <h1 className="text-2xl text-bold">Obras.</h1>
           <div className="mt-5 laptop:mt-10 masonry">
-            {loading ? (
-              // Render a grid of skeleton cards while loading
-              Array.from({ length: 8 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="masonry-item overflow-hidden rounded-lg p-2 laptop:p-4 first:ml-0 bg-transparent"
-                >
-                  <div className="relative rounded-lg overflow-hidden transition-all ease-out duration-300 group">
-                    <div className="bg-gray-300 dark:bg-gray-700 w-full object-cover animate-pulse" style={{paddingBottom: '75%'}} />
-                    <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-6 h-6 bg-gray-300 dark:bg-gray-700 rounded-full animate-pulse" />
+            {loading
+              ? // Render a grid of skeleton cards while loading
+                Array.from({ length: 8 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="masonry-item overflow-hidden rounded-lg p-2 laptop:p-4 first:ml-0 bg-transparent"
+                  >
+                    <div className="relative rounded-lg overflow-hidden transition-all ease-out duration-300 group">
+                      <div
+                        className="bg-gray-300 dark:bg-gray-700 w-full object-cover animate-pulse"
+                        style={{ paddingBottom: "75%" }}
+                      />
+                      <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="w-6 h-6 bg-gray-300 dark:bg-gray-700 rounded-full animate-pulse" />
+                      </div>
                     </div>
+                    <h1 className="mt-5 text-xl font-medium">
+                      <span className="block h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4 animate-pulse" />
+                    </h1>
+                    <h2 className="text-sm opacity-50">
+                      <span className="block mt-2 h-3 bg-gray-300 dark:bg-gray-700 rounded w-2/3 animate-pulse" />
+                    </h2>
                   </div>
-                  <h1 className="mt-5 text-xl font-medium">
-                    <span className="block h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4 animate-pulse" />
-                  </h1>
-                  <h2 className="text-sm opacity-50">
-                    <span className="block mt-2 h-3 bg-gray-300 dark:bg-gray-700 rounded w-2/3 animate-pulse" />
-                  </h2>
-                </div>
-              ))
-            ) : (
-              artworks.map((project) => (
-                <WorkCard
-                  key={project.id}
-                  img={project.imageSrc}
-                  name={project.title}
-                  description={project.description}
-                  onClick={() => router.push(`/art/${project.id}`)}
-                />
-              ))
-            )}
+                ))
+              : artworks.map((project) => (
+                  <WorkCard
+                    key={project.id}
+                    img={project.imageSrc}
+                    name={project.title}
+                    description={project.description}
+                    onClick={() => router.push(`/art/${project.id}`)}
+                  />
+                ))}
           </div>
         </div>
 
         {/* Services section removed from home */}
         <div className="mt-10 laptop:mt-40 p-2 laptop:p-0" ref={aboutRef}>
-          <h1 className="tablet:m-10 text-2xl text-bold">Sobre la galería.</h1>
-          <p className="tablet:m-10 mt-2 text-xl laptop:text-3xl w-full laptop:w-3/5">
-            Galería de Arte es un espacio dedicado a exhibir obras seleccionadas de
-            artistas emergentes y consagrados. Nuestro objetivo es conectar al
-            público con la riqueza creativa local e internacional a través de
-            exposiciones temporales y colecciones permanentes. Navega por las
-            obras, descubre artistas y guarda tus piezas favoritas para volver a
-            ellas más tarde.
-          </p>
+          <div className="border-t border-gray-300 dark:border-gray-700 pt-12">
+            <h1 className="text-3xl tablet:text-4xl laptop:text-5xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
+              Sobre la galería.
+            </h1>
+            <div className="max-w-2xl">
+              <p className="text-lg tablet:text-xl laptop:text-2xl leading-relaxed text-gray-700 dark:text-gray-300 font-light mb-6">
+                Galería de Arte es un espacio dedicado a exhibir obras seleccionadas
+                de artistas emergentes y consagrados. Nuestro objetivo es conectar
+                al público con la riqueza creativa local e internacional a través de
+                exposiciones temporales y colecciones permanentes.
+              </p>
+              <p className="text-base tablet:text-lg laptop:text-xl leading-relaxed text-gray-600 dark:text-gray-400 border-l-4 border-gray-900 dark:border-white pl-6 italic">
+                Navega por las obras, descubre artistas y guarda tus piezas favoritas para volver a
+                ellas más tarde.
+              </p>
+            </div>
+          </div>
         </div>
         <Footer />
       </div>

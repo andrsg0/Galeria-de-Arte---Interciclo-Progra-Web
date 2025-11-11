@@ -23,9 +23,8 @@ export default function ArtDetail() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(
-          `https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
-        );
+        // Use our server proxy to avoid CORS issues
+        const res = await fetch(`/api/met/objects/${id}`);
         if (!res.ok) {
           throw new Error(`Status ${res.status}`);
         }
@@ -41,6 +40,7 @@ export default function ArtDetail() {
         }
       } catch (err) {
         if (!cancelled) {
+          console.error("Error fetching object:", err);
           setError("Error al obtener datos. Revisa tu conexión o intenta más tarde.");
           setObjectData(null);
         }

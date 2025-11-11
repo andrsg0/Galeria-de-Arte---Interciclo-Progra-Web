@@ -17,6 +17,8 @@ const Header = ({ handleWorkScroll, isBlog }) => {
     setMounted(true);
   }, []);
 
+    // Ensure theme is defined (default to 'light' during hydration)
+    const currentTheme = mounted ? theme : 'light';
   return (
     <>
       <Popover className="block tablet:hidden mt-5">
@@ -34,14 +36,15 @@ const Header = ({ handleWorkScroll, isBlog }) => {
                 {data.darkMode && (
                   <Button
                     onClick={() =>
-                      setTheme(theme === "dark" ? "light" : "dark")
+                        setTheme(currentTheme === "dark" ? "light" : "dark")
                     }
                   >
                     <img
                       className="h-6"
                       src={`/images/${
-                        theme === "dark" ? "moon.svg" : "sun.svg"
+                          currentTheme === "dark" ? "moon.svg" : "sun.svg"
                       }`}
+                        alt="Toggle theme"
                     ></img>
                   </Button>
                 )}
@@ -63,39 +66,62 @@ const Header = ({ handleWorkScroll, isBlog }) => {
               </div>
             </div>
             <Popover.Panel
-              className={`absolute right-0 z-10 w-11/12 p-4 ${
-                theme === "dark" ? "bg-slate-800" : "bg-white"
-              } shadow-md rounded-md`}
+              className={`absolute right-0 z-10 w-11/12 p-0 mt-2 ${
+                theme === "dark" ? "bg-gray-900" : "bg-white"
+              } shadow-lg rounded-lg border ${
+                theme === "dark" ? "border-gray-700" : "border-gray-200"
+              }`}
             >
               {!isBlog ? (
                 <div className="grid grid-cols-1">
-                  <Button onClick={handleWorkScroll}>Destacados</Button>
+                  <button
+                    onClick={handleWorkScroll}
+                    className="px-4 py-3 text-left font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors first:rounded-t-lg text-sm"
+                  >
+                    Destacados
+                  </button>
                   {showBlog && (
-                    <Button onClick={() => router.push("/blog")}>Departamentos</Button>
+                    <button
+                      onClick={() => router.push("/blog")}
+                      className="px-4 py-3 text-left font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm border-t border-gray-200 dark:border-gray-700"
+                    >
+                      Departamentos
+                    </button>
                   )}
                   {showResume && (
-                    <Button onClick={() => router.push("/favorites")}>
+                    <button
+                      onClick={() => router.push("/favorites")}
+                      className="px-4 py-3 text-left font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors last:rounded-b-lg text-sm border-t border-gray-200 dark:border-gray-700"
+                    >
                       Favoritos
-                    </Button>
+                    </button>
                   )}
 
                   {/* Contact button removed */}
                 </div>
               ) : (
                 <div className="grid grid-cols-1">
-                  <Button onClick={() => router.push("/")} classes="first:ml-1">
+                  <button
+                    onClick={() => router.push("/")}
+                    className="px-4 py-3 text-left font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors first:rounded-t-lg text-sm"
+                  >
                     Inicio
-                  </Button>
+                  </button>
                   {showBlog && (
-                    <Button onClick={() => router.push("/blog")}>Departamentos</Button>
+                    <button
+                      onClick={() => router.push("/blog")}
+                      className="px-4 py-3 text-left font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm border-t border-gray-200 dark:border-gray-700"
+                    >
+                      Departamentos
+                    </button>
                   )}
                   {showResume && (
-                    <Button
+                    <button
                       onClick={() => router.push("/favorites")}
-                      classes="first:ml-1"
+                      className="px-4 py-3 text-left font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors last:rounded-b-lg text-sm border-t border-gray-200 dark:border-gray-700"
                     >
                       Favoritos
-                    </Button>
+                    </button>
                   )}
 
                   {/* Contact button removed */}
@@ -132,13 +158,14 @@ const Header = ({ handleWorkScroll, isBlog }) => {
             )}
 
             {/* Contact button removed */}
-            {mounted && theme && data.darkMode && (
+            {data.darkMode && (
               <Button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  onClick={() => setTheme(currentTheme === "dark" ? "light" : "dark")}
               >
                 <img
                   className="h-6"
-                  src={`/images/${theme === "dark" ? "moon.svg" : "sun.svg"}`}
+                  alt="Toggle theme"
+                    src={`/images/${currentTheme === "dark" ? "moon.svg" : "sun.svg"}`}
                 ></img>
               </Button>
             )}
@@ -160,13 +187,14 @@ const Header = ({ handleWorkScroll, isBlog }) => {
 
             {/* Contact button removed */}
 
-            {mounted && theme && data.darkMode && (
+            {data.darkMode && (
               <Button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  onClick={() => setTheme(currentTheme === "dark" ? "light" : "dark")}
               >
                 <img
                   className="h-6"
-                  src={`/images/${theme === "dark" ? "moon.svg" : "sun.svg"}`}
+                  alt="Toggle theme"
+                    src={`/images/${currentTheme === "dark" ? "moon.svg" : "sun.svg"}`}
                 ></img>
               </Button>
             )}
