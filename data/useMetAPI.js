@@ -9,7 +9,7 @@ export function useMetAPI(query = "paint", limit = 10) {
       .then(res => res.json())
       .then(data => {
         const artworkIds = data.objectIDs.slice(0, limit);
-        Promise.all(
+        Promise.all(    
           artworkIds.map(id =>
             fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`)
               .then(res => res.json())
@@ -32,3 +32,5 @@ export function useMetAPI(query = "paint", limit = 10) {
 
   return { artworks, loading };
 }
+
+
