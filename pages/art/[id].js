@@ -3,13 +3,81 @@ import Link from "next/link";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import SkeletonLoader from "../../components/SkeletonLoader";
 
-export default function ArtDetail({ objectData }) {
+export default function ArtDetail() {
   const router = useRouter();
+  const { id } = router.query;
 
-  if (router.isFallback) {
-    return <div>Loading...</div>;
+  const [objectData, setObjectData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!id) return;
+
+    let cancelled = false;
+
+    async function fetchObject() {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(
+          `https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
+        );
+        if (!res.ok) {
+          throw new Error(`Status ${res.status}`);
+        }
+        const data = await res.json();
+        if (!cancelled) {
+          // Basic validation
+          if (!data || (!data.primaryImage && !data.primaryImageSmall && !data.title)) {
+            setObjectData(null);
+            setError("Obra no encontrada");
+          } else {
+            setObjectData(data);
+          }
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError("Error al obtener datos. Revisa tu conexión o intenta más tarde.");
+          setObjectData(null);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    fetchObject();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
+  // Mostrar skeleton mientras carga o mientras no hay id en el router
+  if (loading || !id) {
+    return (
+      <div className="relative">
+        <div className="container mx-auto mb-10 p-4">
+          <Header />
+          <SkeletonLoader />
+          <Footer />
+        </div>
+      </div>
+    );
   }
+
+  if (error)
+    return (
+      <div className="container mx-auto p-4">
+        <Header />
+        <p>{error}</p>
+        <Link href="/">← Volver</Link>
+        <Footer />
+      </div>
+    );
 
   if (!objectData) {
     return (
@@ -126,25 +194,4 @@ export default function ArtDetail({ objectData }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context) {
-  const { id } = context.params;
-
-  try {
-    const res = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`);
-    if (!res.ok) {
-      return { notFound: true };
-    }
-    const data = await res.json();
-
-    // If the object has no images and no title, treat as not found
-    if (!data || (!data.primaryImage && !data.primaryImageSmall && !data.title)) {
-      return { notFound: true };
-    }
-
-    return { props: { objectData: data } };
-  } catch (err) {
-    return { notFound: true };
-  }
 }
